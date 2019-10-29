@@ -6,7 +6,7 @@ public class DbUtil {
     /**
      * 声明连接数据库的信息，如数据库URL、用户名及密码
      */
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/user?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/DataBase?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
     /**
@@ -109,67 +109,6 @@ public class DbUtil {
         try {
             getConnection().rollback();
         } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * 关闭数据库连接对象
-     */
-    public static void close() {
-        try {
-            if (rs != null)
-                rs.close();
-            if (s != null)
-                s.close();
-            if (conn != null)
-                conn.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        /*
-         * String sql =
-         * "INSERT INTO tb_users(fd_username,fd_password,fd_usertype,fd_gender,fd_birthdate,fd_email) VALUES ('Wangli','aWeY92,zeP', "
-         * + "'管理员','女','1999-10-22','allen@henu.edu.cn')"; executeUpdate(sql);
-         * close();
-         */
-        // 编写SQL语句
-        String sql = "INSERT INTO tb_users(fd_username,fd_password,fd_usertype,fd_gender,fd_email,"
-                + "fd_birthdate, fd_introduction,fd_hobby) VALUES (?,?,?,?,?,?,?,?)";
-
-        // 执行SQL
-        PreparedStatement ps = DbUtil.executePreparedStatement(sql);
-        try {
-            ps.setString(1, "username");
-            ps.setString(2, "password");
-            ps.setString(3, "1");
-            ps.setString(4, "男");
-            ps.setString(5, "email");
-            ps.setString(6, "birthdate");
-            ps.setString(7, "introduction");
-            ps.setString(8, "hobby");
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        int result = 0;
-        try {
-            result = ps.executeUpdate();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
-            ps.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
