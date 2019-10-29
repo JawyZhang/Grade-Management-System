@@ -1,4 +1,0 @@
-package SystemUI
-
-class Login {
-}
