@@ -12,10 +12,11 @@ public class Course {
 	private String courseName;
 	private int grade;
 	
-	public Course(Teacher teacher, String courseName, int grade) {
+	public Course(Teacher teacher, String courseId, int grade) {
 		setTeacher(teacher);
-		setCourseName(courseName);
+		setCourseId(courseId);
 		setGrade(grade);
+		setCourseName(Course.getCourseName(courseId));
 	}
 	public Course(Teacher teacher, String courseId, String courseName, int grade) {
 		setTeacher(teacher);
