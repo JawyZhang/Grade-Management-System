@@ -91,7 +91,7 @@ public class AdminView extends JFrame {
         this.add(jsb, BorderLayout.CENTER);
         this.add(downButton, BorderLayout.SOUTH);
 
-        this.setTitle("Administrator：");
+        this.setTitle("Administrator??");
         this.setSize(600, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocation(200, 200);
@@ -101,7 +101,7 @@ public class AdminView extends JFrame {
     private void getCollege() throws SQLException {
         String sql = "SELECT name FROM college";
         ResultSet rs = DbUtil.executeQuery(sql);
-        college.addItem("--请选择--");
+        college.addItem("--?????--");
         try {
             while (rs.next()) {
                 college.addItem(rs.getString("name"));
@@ -137,8 +137,8 @@ public class AdminView extends JFrame {
                 rs = DbUtil.executeQuery(sql);
                 while (rs.next()) {
                     row = new Vector();
-                    row.add(rs.getString("id"));
-                    row.add(rs.getString("name"));
+                    row.add(rs.getString("studentId"));
+                    row.add(rs.getString("studentName"));
                     row.add(rs.getString("class"));
                     row.add(rs.getString("college"));
                     if (tableModel != null) {
@@ -191,7 +191,7 @@ public class AdminView extends JFrame {
                 SearchData();
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("找不到对应行");
+                System.out.println("??????????");
             }
         }
     }

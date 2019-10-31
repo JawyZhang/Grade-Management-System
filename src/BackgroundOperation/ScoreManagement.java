@@ -2,6 +2,7 @@ package BackgroundOperation;
 
 import DbOperation.DbUtil;
 
+import javax.rmi.CORBA.Util;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -20,61 +21,41 @@ public class ScoreManagement {
 	}
 	
 	public boolean deleteScore(Score score) {
-		String sqlString = "DELETE FROM score WHERE studentId = ? and courseId = ?";
-		PreparedStatement ps = DbUtil.executePreparedStatement(sqlString);
-		try {
-			ps.setString(1, score.getCourse().getCourseId());
-			ps.setString(2, score.getStudent().getStudentId());
-			int result = ps.executeUpdate();
-			ps.close();
-			if(result<1) {
-				return false;
-			}else {
-				return true;
-			}
-	    } catch (SQLException e) {
-	    	e.printStackTrace();
-	    	return false;
-	    }
+		System.out.println("ÔËÐÐÊ±"+score.getStudent().getStudentId());
+		String studentId = score.getStudent().getStudentId();
+		String courseId = score.getCourse().getCourseId();
+		String sqlString = "DELETE FROM score WHERE studentId = "+studentId+" and courseId = "+courseId;
+		int result = DbUtil.executeUpdate(sqlString);
+		DbUtil.close();
+		if(result<1) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 	
 	public boolean logScore(Score score, int scoreGrade) {
-		String sqlString = "INSERT INTO score(studentId,courseId,score) VALUES (?,?,?)";
-		PreparedStatement ps = DbUtil.executePreparedStatement(sqlString);
-		try {
-			ps.setString(1, score.getStudent().getStudentId());
-			ps.setString(2, score.getCourse().getCourseId());
-			ps.setInt(3, scoreGrade);
-			int result = ps.executeUpdate();
-			ps.close();
-			if(result<1) {
-				return false;
-			}else {
-				return true;
-			}
-	    } catch (SQLException e) {
-	    	e.printStackTrace();
-	    	return false;
-	    }
+		String studentId = score.getStudent().getStudentId();
+		String courseId = score.getCourse().getCourseId();
+		int score1 = scoreGrade;
+		String sqlString = "INSERT INTO score(studentId,courseId,score) VALUES ("+studentId+","+courseId+","+score1+")";
+		int result = DbUtil.executeUpdate(sqlString);
+		if(result<1) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 	
 	public boolean alterScore(Score score, int scoreGrade) {
-		String sqlString = "UPDATE score SET score = ? WHERE studentId = ? and teacherId = ?";
-		PreparedStatement ps = DbUtil.executePreparedStatement(sqlString);
-		try {
-			ps.setInt(1, scoreGrade);
-			ps.setString(2, score.getStudent().getStudentId());
-			ps.setString(3, score.getCourse().getTeacher().getTeacherId());
-			int result = ps.executeUpdate();
-			ps.close();
-			if(result<1) {
-				return false;
-			}else {
-				return true;
-			}
-		} catch (SQLException e) {
-	    	e.printStackTrace();
-	    	return false;
-	    }
+		String studentId = score.getStudent().getStudentId();
+		String courseId = score.getCourse().getCourseId();
+		String sqlString = "UPDATE score SET score = "+scoreGrade+" WHERE studentId = "+studentId+" and courseId = "+courseId;
+		int result = DbUtil.executeUpdate(sqlString);
+		if(result<1) {
+			return false;
+		}else {
+			return true;
+		}
 	}
 }

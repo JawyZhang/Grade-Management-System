@@ -107,7 +107,6 @@ public class Teacher {
 		try {
 			ps.setString(1, this.teacherId);
 			ResultSet resultSet = ps.executeQuery();
-			ps.close();
 			return resultSet;
 	    } catch (SQLException e) {
 	    	e.printStackTrace();
@@ -121,7 +120,6 @@ public class Teacher {
 		try {
 			ps.setString(1, courseId);
 			ResultSet resultSet = ps.executeQuery();
-			ps.close();
 			return resultSet;
 	    } catch (SQLException e) {
 	    	e.printStackTrace();
