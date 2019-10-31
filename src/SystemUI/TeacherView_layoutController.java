@@ -1,15 +1,15 @@
 package SystemUI;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.net.URL;
+import java.util.ResourceBundle;
 
-
-public class TeacherView_layoutController {
+public class TeacherView_layoutController implements Initializable {
     @FXML
     public TableView tableView;
     @FXML
@@ -26,6 +26,12 @@ public class TeacherView_layoutController {
     public TextField tf_score;
     @FXML
     public Button btn_alter;
+    @FXML
+    public TableColumn tc_sid;
+    @FXML
+    public TableColumn tc_cid;
+    @FXML
+    public TableColumn tc_score;
 
 
     public void ok_onClick(ActionEvent actionEvent) {
@@ -33,6 +39,24 @@ public class TeacherView_layoutController {
     }
 
     public void delete_onclick(ActionEvent actionEvent) {
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        tc_sid.setCellFactory(new PropertyValueFactory("Student ID"));
+    }
+
+    public void log_onclick(ActionEvent actionEvent) {
+        String sid = tf_sid.getText();
+        String cid = tf_cid.getText();
+        String score = tf_score.getText();
+        String tid = TeacherView.tid;
+        System.out.println(sid);
+        System.out.println(cid);
+        System.out.println(score);
+        System.out.println(tid);
+
 
     }
 }
