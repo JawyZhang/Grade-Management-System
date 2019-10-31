@@ -152,6 +152,7 @@ public class AdminView extends JFrame {
                     row.add(rs.getString("college"));
                     if (tableModel != null) {
                         tableModel.addRow(row);
+                        jTable.getColumnModel().getColumn(tableModel.getColumnCount()-1).setCellEditor(new DefaultCellEditor(college));
                     }
                 }
             } else {
