@@ -27,6 +27,7 @@ public class AdminView extends JFrame {
     ButtonGroup bg = null;
     JPanel navigator = null;
     JPanel downButton = null;
+    JComboBox c = null;
     JComboBox college = null;
     JButton search = null;
     DefaultTableModel tableModel = null;
@@ -61,6 +62,7 @@ public class AdminView extends JFrame {
         navigator.add(teacher);
 
         college = new JComboBox();
+        c=new JComboBox();
         getCollege();
         navigator.add(college);
         navigator.add(search);
@@ -114,6 +116,7 @@ public class AdminView extends JFrame {
         try {
             while (rs.next()) {
                 college.addItem(rs.getString("name"));
+                c.addItem(rs.getString("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -152,7 +155,6 @@ public class AdminView extends JFrame {
                     row.add(rs.getString("college"));
                     if (tableModel != null) {
                         tableModel.addRow(row);
-                        jTable.getColumnModel().getColumn(tableModel.getColumnCount()-1).setCellEditor(new DefaultCellEditor(college));
                     }
                 }
             } else {
@@ -174,6 +176,7 @@ public class AdminView extends JFrame {
             }
             row = null;
             tableModel.addRow(row);
+            jTable.getColumnModel().getColumn(tableModel.getColumnCount()-1).setCellEditor(new DefaultCellEditor(c));
             rs.close();
             DbUtil.close();
             tableModel.fireTableDataChanged();
