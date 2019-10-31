@@ -30,6 +30,7 @@ public class LaunchView extends Application {
     public void start(Stage primaryStage) throws Exception {
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         this.primaryStage = primaryStage;
+
         primaryStage.setTitle("Please Login");
         FlowPane pane = new FlowPane();
         pane.setPadding(new Insets(11, 12, 13, 14));

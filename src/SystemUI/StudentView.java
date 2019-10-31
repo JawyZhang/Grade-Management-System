@@ -24,6 +24,7 @@ public class StudentView extends Application{
     @FXML
     private int id ;
     private Stage stage1 ;
+    @FXML
     private  TabableView tabableView;
     @FXML
     private Button btn_ok;
@@ -37,6 +38,7 @@ public class StudentView extends Application{
 
             stage1.setScene(scene);
             stage1.show();
+
 
     }
 

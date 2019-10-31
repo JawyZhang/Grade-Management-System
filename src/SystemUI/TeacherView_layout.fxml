@@ -6,18 +6,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="464.0" prefWidth="611.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="SystemUI.TeacherView">
+<AnchorPane prefHeight="486.9998779296875" prefWidth="652.9998779296875" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="SystemUI.TeacherView_layoutController">
   <TableView fx:id="tableView" layoutX="93.0" layoutY="31.0" prefHeight="289.0" prefWidth="378.0">
     <columns>
-      <TableColumn prefWidth="75.0" text="ID" />
-      <TableColumn prefWidth="75.0" text="Name" />
-      <TableColumn prefWidth="75.0" text="Course" />
-      <TableColumn prefWidth="75.0" text="Teacher" />
-      <TableColumn prefWidth="75.0" text="Score" />
+      <TableColumn prefWidth="75.0" text="ID" fx:id="tc_id" />
     </columns>
   </TableView>
-  <Button fx:id="btn_ok" layoutX="479.0" layoutY="299.0" mnemonicParsing="false" text="Ok and Logout" />
-  <Button fx:id="btn_delete" layoutX="503.0" layoutY="87.0" mnemonicParsing="false" text="Delete" />
+  <Button fx:id="btn_ok" layoutX="479.0" layoutY="299.0" mnemonicParsing="false" onAction="#ok_onClick" text="Ok and Logout" />
+  <Button fx:id="btn_delete" onAction="#delete_onclick" layoutX="503.0" layoutY="87.0" mnemonicParsing="false" text="Delete" />
   <Button fx:id="btn_log" layoutX="320.0" layoutY="377.0" mnemonicParsing="false" text="Log" />
   <TextField fx:id="tf_sid" layoutX="159.0" layoutY="342.0" prefHeight="21.0" prefWidth="107.0" />
   <TextField fx:id="tf_cid" layoutX="159.0" layoutY="376.0" prefHeight="21.0" prefWidth="107.0" />
