@@ -11,18 +11,13 @@ public class Course {
 	private String courseId;
 	private String courseName;
 	private int grade;
-	
-	public Course(Teacher teacher, String courseId, int grade) {
-		setTeacher(teacher);
+
+
+	public Course(String courseId){
+		setTeacher(new Teacher(Course.getCourseTeacherId(courseId)));
 		setCourseId(courseId);
-		setGrade(grade);
 		setCourseName(Course.getCourseName(courseId));
-	}
-	public Course(Teacher teacher, String courseId, String courseName, int grade) {
-		setTeacher(teacher);
-		setCourseId(courseId);
-		setCourseName(courseName);
-		setGrade(grade);
+		setGrade(Course.getCourseGrade(courseId));
 	}
 	
 	public Course getCourse() {
@@ -60,10 +55,47 @@ public class Course {
 			ps.setString(1, courseId);
 			ResultSet resultSet = ps.executeQuery();
 			resultSet.next();
-			return resultSet.getString("courseName");
+			String str = resultSet.getString("courseName");
+			resultSet.close();
+			ps.close();
+			return str;
 	    } catch (SQLException e) {
 	    	e.printStackTrace();
 	    	return null;
 	    }
+	}
+
+	public static String getCourseTeacherId(String courseId) {
+		String sqlString = "SELECT teacherId FROM course WHERE courseId = ?";
+		PreparedStatement ps = DbUtil.executePreparedStatement(sqlString);
+		try {
+			ps.setString(1, courseId);
+			ResultSet resultSet = ps.executeQuery();
+			resultSet.next();
+			String str = resultSet.getString("teacherId");
+			ps.close();
+			resultSet.close();
+			return str;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static int getCourseGrade(String courseId) {
+		String sqlString = "SELECT courseGrade FROM course WHERE courseId = ?";
+		PreparedStatement ps = DbUtil.executePreparedStatement(sqlString);
+		try {
+			ps.setString(1, courseId);
+			ResultSet resultSet = ps.executeQuery();
+			resultSet.next();
+			int result = resultSet.getInt("courseGrade");
+			ps.close();
+			resultSet.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
 	}
 }
