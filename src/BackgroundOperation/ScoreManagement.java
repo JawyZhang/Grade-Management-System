@@ -26,6 +26,7 @@ public class ScoreManagement {
 			ps.setString(1, score.getCourse().getCourseId());
 			ps.setString(2, score.getStudent().getStudentId());
 			int result = ps.executeUpdate();
+			ps.close();
 			if(result<1) {
 				return false;
 			}else {
@@ -45,6 +46,7 @@ public class ScoreManagement {
 			ps.setString(2, score.getCourse().getCourseId());
 			ps.setInt(3, scoreGrade);
 			int result = ps.executeUpdate();
+			ps.close();
 			if(result<1) {
 				return false;
 			}else {
@@ -64,12 +66,13 @@ public class ScoreManagement {
 			ps.setString(2, score.getStudent().getStudentId());
 			ps.setString(3, score.getCourse().getTeacher().getTeacherId());
 			int result = ps.executeUpdate();
+			ps.close();
 			if(result<1) {
 				return false;
 			}else {
 				return true;
 			}
-	    } catch (SQLException e) {
+		} catch (SQLException e) {
 	    	e.printStackTrace();
 	    	return false;
 	    }

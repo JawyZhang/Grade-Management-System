@@ -9,7 +9,7 @@ public class Test {
 	public static void main(String[] args) throws SQLException {
 		Student student = new Student("1710120000");
 		Teacher teacher = new Teacher("12865");
-		Course course = new Course(teacher, "1", "�ߵ���ѧ",1);
+		Course course = new Course("1");
 		Score score = new Score(course, student);
 		ScoreManagement scoreManagement = new ScoreManagement(teacher);
 		
