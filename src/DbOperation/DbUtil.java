@@ -4,13 +4,13 @@ import java.sql.*;
 
 public class DbUtil {
     /**
-     * å£°æ˜è¿æ¥æ•°æ®åº“çš„ä¿¡æ¯ï¼Œå¦‚æ•°æ®åº“URLã€ç”¨æˆ·ååŠå¯†ç 
+     * ÉùÃ÷Á¬½ÓÊı¾İ¿âµÄĞÅÏ¢£¬ÈçÊı¾İ¿âURL¡¢ÓÃ»§Ãû¼°ÃÜÂë
      */
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/user?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/database?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8&useSSL=false";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
     /**
-     * å£°æ˜JDBCç›¸å…³å¯¹è±¡
+     * ÉùÃ÷JDBCÏà¹Ø¶ÔÏó
      */
     protected static Statement s = null;
     protected static Statement ps = null;
@@ -18,13 +18,13 @@ public class DbUtil {
     protected static Connection conn = null;
 
     /**
-     * åˆ›å»ºæ•°æ®åº“è¿æ¥
-     *synchronizedä¿®é¥°ä¸€ä¸ªæ–¹æ³•ï¼Œè¢«ä¿®é¥°çš„æ–¹æ³•ç§°ä¸ºåŒæ­¥æ–¹æ³•ï¼Œå…¶ä½œç”¨çš„èŒƒå›´æ˜¯æ•´ä¸ªæ–¹æ³•ï¼Œä½œç”¨çš„å¯¹è±¡æ˜¯è°ƒç”¨è¿™ä¸ªæ–¹æ³•çš„å¯¹è±¡ï¼›
+     * ´´½¨Êı¾İ¿âÁ¬½Ó
+     *synchronizedĞŞÊÎÒ»¸ö·½·¨£¬±»ĞŞÊÎµÄ·½·¨³ÆÎªÍ¬²½·½·¨£¬Æä×÷ÓÃµÄ·¶Î§ÊÇÕû¸ö·½·¨£¬×÷ÓÃµÄ¶ÔÏóÊÇµ÷ÓÃÕâ¸ö·½·¨µÄ¶ÔÏó£»
      * @return conn
      */
     public static synchronized Connection getConnection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,11 +33,11 @@ public class DbUtil {
     }
 
     /**
-     * æ‰§è¡ŒINSERT/UPDATE/DELETE SQLè¯­å¥
+     * Ö´ĞĞINSERT/UPDATE/DELETE SQLÓï¾ä
      *
      * @param sql
-     *            SQLè¯­å¥ï¼Œå­—ç¬¦ä¸²ç±»å‹
-     * @return æ‰§è¡Œç»“æœï¼Œintç±»å‹
+     *            SQLÓï¾ä£¬×Ö·û´®ÀàĞÍ
+     * @return Ö´ĞĞ½á¹û£¬intÀàĞÍ
      */
     public static int executeUpdate(String sql) {
         int count = 0;
@@ -51,11 +51,11 @@ public class DbUtil {
     }
 
     /**
-     * æ‰§è¡ŒSELECT SQLè¯­å¥
+     * Ö´ĞĞSELECT SQLÓï¾ä
      *
      * @param sql
-     *            SQLè¯­å¥ï¼Œå­—ç¬¦ä¸²ç±»å‹
-     * @return ResultSetç»“æœé›†
+     *            SQLÓï¾ä£¬×Ö·û´®ÀàĞÍ
+     * @return ResultSet½á¹û¼¯
      */
     public static ResultSet executeQuery(String sql) {
 
@@ -69,7 +69,7 @@ public class DbUtil {
         return rs;
     }
     /**
-     * æ‰§è¡ŒSELECT SQLè¯­å¥ä½¿ç”¨PreparedStatment
+     * Ö´ĞĞSELECT SQLÓï¾äÊ¹ÓÃPreparedStatment
      * @param sql
      * @return
      */
@@ -86,11 +86,11 @@ public class DbUtil {
     }
 
     /**
-     * æ‰§è¡ŒåŠ¨æ€SQLè¯­å¥
+     * Ö´ĞĞ¶¯Ì¬SQLÓï¾ä
      *
      * @param sql
-     *            å«æœ‰å‚æ•°çš„åŠ¨æ€SQLè¯­å¥ã€‚
-     * @return è¿”å›PreparedStatementå¯¹è±¡
+     *            º¬ÓĞ²ÎÊıµÄ¶¯Ì¬SQLÓï¾ä¡£
+     * @return ·µ»ØPreparedStatement¶ÔÏó
      */
     public static PreparedStatement executePreparedStatement(String sql) {
         PreparedStatement ps = null;
@@ -103,7 +103,7 @@ public class DbUtil {
     }
 
     /**
-     * äº‹åŠ¡å›æ»š
+     * ÊÂÎñ»Ø¹ö
      */
     public static void rollback() {
         try {
@@ -116,7 +116,7 @@ public class DbUtil {
     }
 
     /**
-     * å…³é—­æ•°æ®åº“è¿æ¥å¯¹è±¡
+     * ¹Ø±ÕÊı¾İ¿âÁ¬½Ó¶ÔÏó
      */
     public static void close() {
         try {
@@ -136,20 +136,20 @@ public class DbUtil {
         /*
          * String sql =
          * "INSERT INTO tb_users(fd_username,fd_password,fd_usertype,fd_gender,fd_birthdate,fd_email) VALUES ('Wangli','aWeY92,zeP', "
-         * + "'ç®¡ç†å‘˜','å¥³','1999-10-22','allen@henu.edu.cn')"; executeUpdate(sql);
+         * + "'¹ÜÀíÔ±','Å®','1999-10-22','allen@henu.edu.cn')"; executeUpdate(sql);
          * close();
          */
-        // ç¼–å†™SQLè¯­å¥
+        // ±àĞ´SQLÓï¾ä
         String sql = "INSERT INTO tb_users(fd_username,fd_password,fd_usertype,fd_gender,fd_email,"
                 + "fd_birthdate, fd_introduction,fd_hobby) VALUES (?,?,?,?,?,?,?,?)";
 
-        // æ‰§è¡ŒSQL
+        // Ö´ĞĞSQL
         PreparedStatement ps = DbUtil.executePreparedStatement(sql);
         try {
             ps.setString(1, "username");
             ps.setString(2, "password");
             ps.setString(3, "1");
-            ps.setString(4, "ç”·");
+            ps.setString(4, "ÄĞ");
             ps.setString(5, "email");
             ps.setString(6, "birthdate");
             ps.setString(7, "introduction");
