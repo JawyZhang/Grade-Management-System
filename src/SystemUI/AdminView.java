@@ -102,7 +102,7 @@ public class AdminView extends JFrame {
         this.add(jsb, BorderLayout.CENTER);
         this.add(downButton, BorderLayout.SOUTH);
 
-        this.setTitle("Administrator：");
+        this.setTitle("Administrator锛�");
         this.setSize(600, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocation(200, 200);
@@ -112,7 +112,7 @@ public class AdminView extends JFrame {
     private void getCollege() throws SQLException {
         String sql = "SELECT name FROM college";
         ResultSet rs = DbUtil.executeQuery(sql);
-        college.addItem("--请选择--");
+        college.addItem("--璇烽�夋嫨--");
         try {
             while (rs.next()) {
                 college.addItem(rs.getString("name"));
@@ -224,6 +224,7 @@ public class AdminView extends JFrame {
             }
             sql += "WHERE id = '" + jTable.getValueAt(row, 0).toString() + "'";
             int n = JOptionPane.showConfirmDialog(null, "确认删除id为" + jTable.getValueAt(row, 0).toString() + "的记录吗？", "删除项", JOptionPane.YES_NO_OPTION);
+
             if (n == 0) {
                 DbUtil.executeUpdate(sql);
                 DbUtil.close();
