@@ -17,7 +17,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
 public class LaunchView extends Application {
-    String tableName;
     String id;
     String password;
     Stage primaryStage;
@@ -36,19 +35,6 @@ public class LaunchView extends Application {
         pane.setPadding(new Insets(11, 12, 13, 14));
         pane.setVgap(15);
         pane.setHgap(15);
-
-        Label l_role = new Label("Please select your role:");
-        ToggleGroup tg_role = new ToggleGroup();
-        RadioButton rb_student = new RadioButton("Student");
-        rb_student.setUserData("student");
-        rb_student.setToggleGroup(tg_role);
-        rb_student.setSelected(true);
-        RadioButton rb_teacher = new RadioButton("Teacher");
-        rb_teacher.setToggleGroup(tg_role);
-        rb_teacher.setUserData("teacher");
-        RadioButton rb_admin = new RadioButton("Admin");
-        rb_admin.setToggleGroup(tg_role);
-        rb_admin.setUserData("admin");
 
 
         Label l_id = new Label("Please input your id:");
@@ -92,27 +78,25 @@ public class LaunchView extends Application {
                  */
                 password = pw_password.getText();
                 id = tf_id.getText();
-                tableName = tg_role.getSelectedToggle().getUserData().toString();
                 try {
-                    Login(Integer.parseInt(id), password, tableName);
+                    Login(id, password);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                System.out.println("select table name is :" + tableName);
 
             }
 
 
         });
 
-        pane.getChildren().addAll(l_role, rb_admin, rb_student, rb_teacher, l_id, tf_id, l_password, pw_password, bt_sub);
+        pane.getChildren().addAll(l_id, tf_id, l_password, pw_password, bt_sub);
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void Login(int id, String password, String userType) throws SQLException {
-/*        String sql = "select * from user where id = ? and password = ? and userType = ?";
+    private void Login(String id, String password) throws SQLException {
+        String sql = "select * from user where id = ? and password = ?";
 
         Connection cnn = DbUtil.getConnection();
         PreparedStatement ps = null;
@@ -122,9 +106,8 @@ public class LaunchView extends Application {
             e.printStackTrace();
         }
 
-        ps.setString(1,String.valueOf(id));
+        ps.setString(1, id);
         ps.setString(2, password);
-        ps.setString(3, userType);
         System.out.println(sql);
 
         ResultSet rs = ps.executeQuery();
@@ -138,33 +121,20 @@ public class LaunchView extends Application {
         }
         else
         {
-            System.out.println("Welcome,"+rs.getString("userName"));
-        }
-
-
-    }
-*/
-/*******
- * 页面跳转
- ********/
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentView_layout.fxml"));
-            Parent root = loader.load();
-            /**********
-             * 这里需要把id修改成学生名字
-             */
-            primaryStage.setTitle("Welcome,"+Integer.toString(id));
-            StudentView controller = loader.getController();
-//            controller.setApp(this);
-//            controller.setUserInfo(id);
-            controller.setInformation(id);
-            Scene scene = new Scene(root, 700, 460);
-            // scene.getStylesheets().add(Main.class.getResource("main.css").toExternalForm());
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            ;
-        } catch (Exception e) {
-            e.printStackTrace();
+            if(rs.getString("userType").equals("teacher")) {
+                TeacherCourseSelectView tv = new TeacherCourseSelectView(id);
+                primaryStage.close();
+            }else if(rs.getString("userType").equals("student")) {
+                StudentView sv = new StudentView(id);
+                primaryStage.close();
+            }else if(rs.getString("userType").equals("admin")) {
+                AdminView av = new AdminView();
+                primaryStage.close();
+            }else{
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Please contact administrater");
+                alert.showAndWait()
+                        .filter(response -> response == ButtonType.OK);
+            }
         }
     }
 }
