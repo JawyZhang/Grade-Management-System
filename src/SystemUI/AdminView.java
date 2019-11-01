@@ -128,7 +128,7 @@ public class AdminView extends JFrame {
     private void getCollege() throws SQLException {
         String sql = "SELECT name FROM college";
         ResultSet rs = DbUtil.executeQuery(sql);
-        college.addItem("--请选择--");
+        college.addItem("--è¯·é€‰æ‹©--");
         try {
             while (rs.next()) {
                 college.addItem(rs.getString("name"));
@@ -155,13 +155,14 @@ public class AdminView extends JFrame {
                 sql+=" "+jTable.getColumnName(i) +" = '"+jTable.getValueAt(row,i)+"', ";
             }
             sql = sql.substring(0, sql.length() - 2);
+
             if(student.isSelected()){
                 sql += " WHERE (studentId = '" + jTable.getValueAt(row, 0).toString() + "')";
             }else{
                 sql += " WHERE (id = '" + jTable.getValueAt(row, 0).toString() + "')";
             }
             System.out.println(sql);
-            String message = "?·??????:";
+            String message = "?Â·??????:";
             for(int i = 0;i<jTable.getColumnCount();i++){
                 message += jTable.getColumnName(i)+":"+jTable.getValueAt(row,i)+" ";
             }
@@ -174,7 +175,9 @@ public class AdminView extends JFrame {
                     SearchData();
                 } catch (SQLException e) {
                     e.printStackTrace();
+
                     System.out.println("????????????");
+
                 }
             } else {
                 DbUtil.close();
@@ -248,7 +251,7 @@ public class AdminView extends JFrame {
     private void addData() {
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             if (jTable.getValueAt(jTable.getRowCount() - 1, i) == null || jTable.getValueAt(jTable.getRowCount() - 1, i).equals("")) {
-                JOptionPane.showMessageDialog(null, "è?¨??????è????‰?????°??????", "è???‘?", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ã¨?Â¨??????Ã¨????â€°?????Â°??????", "Ã¨???â€˜?", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
@@ -265,7 +268,7 @@ public class AdminView extends JFrame {
                 ps.setString(i+1,jTable.getValueAt(jTable.getRowCount() - 1, i).toString());
             }
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "????????’?…???°??????");
+            JOptionPane.showMessageDialog(null, "????????â€™?â€¦???Â°??????");
             ps.close();
             conn.close();
             DbUtil.close();
@@ -287,7 +290,7 @@ public class AdminView extends JFrame {
                 sql += "teacher ";
                 sql += "WHERE id = '" + jTable.getValueAt(row, 0).toString() + "'";
             }
-            int n = JOptionPane.showConfirmDialog(null, "???è?¤?? é?¤id???" + jTable.getValueAt(row, 0).toString() + "???è?°?????—???", "?? é?¤é??", JOptionPane.YES_NO_OPTION);
+            int n = JOptionPane.showConfirmDialog(null, "???Ã¨?Â¤?? Ã©?Â¤id???" + jTable.getValueAt(row, 0).toString() + "???Ã¨?Â°?????â€”???", "?? Ã©?Â¤Ã©??", JOptionPane.YES_NO_OPTION);
 
             if (n == 0) {
                 DbUtil.executeUpdate(sql);
@@ -296,7 +299,7 @@ public class AdminView extends JFrame {
                     SearchData();
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    System.out.println("?‰??????°?????”è??");
+                    System.out.println("?â€°??????Â°?????â€Ã¨??");
                 }
             } else {
                 DbUtil.close();
