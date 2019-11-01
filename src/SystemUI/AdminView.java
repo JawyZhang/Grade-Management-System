@@ -3,6 +3,7 @@ package SystemUI;
 import DbOperation.DbUtil;
 
 import javax.swing.*;
+
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -19,13 +20,14 @@ import java.util.Vector;
 public class AdminView extends JFrame {
     JButton delete = null;
     JTable jTable = null;
-    JButton subbmit = null;
+    JButton addItem = null;
     JScrollPane jsb = null;
     JRadioButton student = null;
     JRadioButton teacher = null;
     ButtonGroup bg = null;
     JPanel navigator = null;
     JPanel downButton = null;
+    JComboBox c = null;
     JComboBox college = null;
     JButton search = null;
     DefaultTableModel tableModel = null;
@@ -42,6 +44,12 @@ public class AdminView extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
                     SearchData();
+                    if (addItem.isEnabled() == false) {
+                        addItem.setEnabled(true);
+                    }
+                    if (delete.isEnabled() == false) {
+                        delete.setEnabled(true);
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -54,19 +62,22 @@ public class AdminView extends JFrame {
         navigator.add(teacher);
 
         college = new JComboBox();
+        c=new JComboBox();
         getCollege();
         navigator.add(college);
         navigator.add(search);
 
-        subbmit = new JButton("submit");
-        subbmit.addActionListener(new ActionListener() {
+        addItem = new JButton("add");
+        addItem.setEnabled(false);
+        addItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                subbmit();
+                addData();
             }
         });
 
         delete = new JButton("delete");
+        delete.setEnabled(false);
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -82,12 +93,12 @@ public class AdminView extends JFrame {
         downButton = new JPanel();
         downButton.setLayout(new FlowLayout());
         downButton.add(delete);
-        downButton.add(subbmit);
+        downButton.add(addItem);
 
         this.setLayout(new BorderLayout());
         this.add(navigator, BorderLayout.NORTH);
         jsb = new JScrollPane(jTable);
-        jsb.setBorder(new EmptyBorder(5,5,5,5));
+        jsb.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.add(jsb, BorderLayout.CENTER);
         this.add(downButton, BorderLayout.SOUTH);
 
@@ -105,6 +116,7 @@ public class AdminView extends JFrame {
         try {
             while (rs.next()) {
                 college.addItem(rs.getString("name"));
+                c.addItem(rs.getString("name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,34 +176,66 @@ public class AdminView extends JFrame {
             }
             row = null;
             tableModel.addRow(row);
+            jTable.getColumnModel().getColumn(tableModel.getColumnCount()-1).setCellEditor(new DefaultCellEditor(c));
             rs.close();
             DbUtil.close();
             tableModel.fireTableDataChanged();
         }
     }
 
-    private void subbmit(){
+    private void addData() {
+        for (int i = 0; i < jTable.getColumnCount(); i++) {
+            if (jTable.getValueAt(jTable.getRowCount() - 1, i) == null || jTable.getValueAt(jTable.getRowCount() - 1, i).equals("")) {
+                JOptionPane.showMessageDialog(null, "表中不能有空数据！", "警告", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        String sql = "INSERT INTO ";
+        if (student.isSelected()) {
+            sql += "student VALUES(?,?,?,?)";
+        } else {
+            sql += "teacher VALUES(?,?,?)";
+        }
+        Connection conn = DbUtil.getConnection();
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            for (int i = 0; i < jTable.getColumnCount(); i++){
+                ps.setString(i+1,jTable.getValueAt(jTable.getRowCount() - 1, i).toString());
+            }
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "成功插入数据！");
+            ps.close();
+            conn.close();
+            DbUtil.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     private void deleteItem() {
-        if (jTable!=null){
+        if (jTable != null) {
             int row = jTable.getSelectedRow();
             String sql = "DELETE FROM ";//student WHERE id = '1710120009'";
-            if (student.isSelected()){
-                sql+="student ";
+            if (student.isSelected()) {
+                sql += "student ";
+            } else {
+                sql += "teacher ";
             }
-            else{
-                sql+="teacher ";
-            }
-            sql+="WHERE id = '"+jTable.getValueAt(row,0).toString()+"'";
-            DbUtil.executeUpdate(sql);
-            DbUtil.close();
-            try {
-                SearchData();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.out.println("找不到对应行");
+            sql += "WHERE id = '" + jTable.getValueAt(row, 0).toString() + "'";
+            int n = JOptionPane.showConfirmDialog(null, "确认删除id为" + jTable.getValueAt(row, 0).toString() + "的记录吗？", "删除项", JOptionPane.YES_NO_OPTION);
+            if (n == 0) {
+                DbUtil.executeUpdate(sql);
+                DbUtil.close();
+                try {
+                    SearchData();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("找不到对应行");
+                }
+            } else {
+                DbUtil.close();
+                return;
             }
         }
     }
