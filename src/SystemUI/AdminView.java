@@ -118,7 +118,7 @@ public class AdminView extends JFrame {
         this.add(jsb, BorderLayout.CENTER);
         this.add(downButton, BorderLayout.SOUTH);
 
-        this.setTitle("Administrator£º");
+        this.setTitle("Administratoré”›ï¿½");
         this.setSize(600, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocation(200, 200);
@@ -128,7 +128,7 @@ public class AdminView extends JFrame {
     private void getCollege() throws SQLException {
         String sql = "SELECT name FROM college";
         ResultSet rs = DbUtil.executeQuery(sql);
-        college.addItem("--ÇëÑ¡Ôñ--");
+        college.addItem("--ç’‡çƒ½ï¿½å¤‹å«¨--");
         try {
             while (rs.next()) {
                 college.addItem(rs.getString("name"));
@@ -241,7 +241,7 @@ public class AdminView extends JFrame {
     private void addData() {
         for (int i = 0; i < jTable.getColumnCount(); i++) {
             if (jTable.getValueAt(jTable.getRowCount() - 1, i) == null || jTable.getValueAt(jTable.getRowCount() - 1, i).equals("")) {
-                JOptionPane.showMessageDialog(null, "±íÖÐ²»ÄÜÓÐ¿ÕÊý¾Ý£¡", "¾¯¸æ", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "è¡¨ä¸­ä¸èƒ½æœ‰ç©ºæ•°æ®ï¼", "è­¦å‘Š", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
@@ -258,7 +258,7 @@ public class AdminView extends JFrame {
                 ps.setString(i+1,jTable.getValueAt(jTable.getRowCount() - 1, i).toString());
             }
             ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "³É¹¦²åÈëÊý¾Ý£¡");
+            JOptionPane.showMessageDialog(null, "æˆåŠŸæ’å…¥æ•°æ®ï¼");
             ps.close();
             conn.close();
             DbUtil.close();
@@ -278,7 +278,8 @@ public class AdminView extends JFrame {
                 sql += "teacher ";
             }
             sql += "WHERE id = '" + jTable.getValueAt(row, 0).toString() + "'";
-            int n = JOptionPane.showConfirmDialog(null, "È·ÈÏÉ¾³ýidÎª" + jTable.getValueAt(row, 0).toString() + "µÄ¼ÇÂ¼Âð£¿", "É¾³ýÏî", JOptionPane.YES_NO_OPTION);
+            int n = JOptionPane.showConfirmDialog(null, "ç¡®è®¤åˆ é™¤idä¸º" + jTable.getValueAt(row, 0).toString() + "çš„è®°å½•å—ï¼Ÿ", "åˆ é™¤é¡¹", JOptionPane.YES_NO_OPTION);
+
             if (n == 0) {
                 DbUtil.executeUpdate(sql);
                 DbUtil.close();
@@ -286,7 +287,7 @@ public class AdminView extends JFrame {
                     SearchData();
                 } catch (SQLException e) {
                     e.printStackTrace();
-                    System.out.println("ÕÒ²»µ½¶ÔÓ¦ÐÐ");
+                    System.out.println("æ‰¾ä¸åˆ°å¯¹åº”è¡Œ");
                 }
             } else {
                 DbUtil.close();
