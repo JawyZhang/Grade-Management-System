@@ -31,6 +31,7 @@ public class AdminView extends JFrame {
     JComboBox college = null;
     JButton search = null;
     DefaultTableModel tableModel = null;
+    JButton modify = null;
 
     public AdminView() throws SQLException {
         navigator = new JPanel();
@@ -49,6 +50,9 @@ public class AdminView extends JFrame {
                     }
                     if (delete.isEnabled() == false) {
                         delete.setEnabled(true);
+                    }
+                    if (modify.isEnabled() == false) {
+                        modify.setEnabled(true);
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -84,6 +88,16 @@ public class AdminView extends JFrame {
                 deleteItem();
             }
         });
+
+        modify = new JButton("modify");
+        modify.setEnabled(false);
+        modify.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                modifyData();
+            }
+        });
+
         tableModel = new DefaultTableModel();
         jTable = new JTable(tableModel);
         jTable.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -92,8 +106,10 @@ public class AdminView extends JFrame {
         jTable.setDefaultRenderer(Object.class, r);
         downButton = new JPanel();
         downButton.setLayout(new FlowLayout());
-        downButton.add(delete);
+
         downButton.add(addItem);
+        downButton.add(delete);
+        downButton.add(modify);
 
         this.setLayout(new BorderLayout());
         this.add(navigator, BorderLayout.NORTH);
@@ -123,6 +139,44 @@ public class AdminView extends JFrame {
         }
         rs.close();
         DbUtil.close();
+    }
+
+    private void modifyData(){
+        if (jTable != null) {
+            int row = jTable.getSelectedRow();
+            String sql = "UPDATE ";//student WHERE id = '1710120009'";
+            if (student.isSelected()) {
+                sql += "student ";
+            } else {
+                sql += "teacher ";
+            }
+            sql+="SET";
+            for(int i=0;i<jTable.getColumnCount();i++){
+                sql+=" "+jTable.getColumnName(i) +" = '"+jTable.getValueAt(row,i)+"', ";
+            }
+            sql = sql.substring(0, sql.length() - 2);
+            sql += " WHERE (id = '" + jTable.getValueAt(row, 0).toString() + "')";
+            System.out.println(sql);
+            String message = "确认修改:";
+            for(int i = 0;i<jTable.getColumnCount();i++){
+                message += jTable.getColumnName(i)+":"+jTable.getValueAt(row,i)+" ";
+            }
+            message+="的数据记录吗？";
+            int n = JOptionPane.showConfirmDialog(null, message, "修改项", JOptionPane.YES_NO_OPTION);
+            if (n == 0) {
+                DbUtil.executeUpdate(sql);
+                DbUtil.close();
+                try {
+                    SearchData();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    System.out.println("找不到对应行");
+                }
+            } else {
+                DbUtil.close();
+                return;
+            }
+        }
     }
 
     private void SearchData() throws SQLException {
@@ -178,6 +232,7 @@ public class AdminView extends JFrame {
             tableModel.addRow(row);
             jTable.getColumnModel().getColumn(tableModel.getColumnCount()-1).setCellEditor(new DefaultCellEditor(c));
             rs.close();
+            conn.close();
             DbUtil.close();
             tableModel.fireTableDataChanged();
         }
