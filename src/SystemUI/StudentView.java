@@ -1,5 +1,7 @@
 package SystemUI;
 
+import BackgroundOperation.Course;
+import BackgroundOperation.Student;
 import DbOperation.DbUtil;
 
 import javax.swing.*;
@@ -15,149 +17,87 @@ import java.sql.SQLException;
 import java.util.Vector;
 
 public class StudentView extends JFrame {
-    JButton delete = null;
     JTable jTable = null;
-    JButton subbmit = null;
     JScrollPane jsb = null;
-    JRadioButton student = null;
-    JRadioButton teacher = null;
-    ButtonGroup bg = null;
     JPanel navigator = null;
-    JPanel downButton = null;
-    JComboBox college = null;
+    public static JComboBox grade = null;
     JButton search = null;
-    DefaultTableModel tableModel = null;
+    public static DefaultTableModel tableModel = null;
+    public static Student student = null;
 
-    public StudentView() throws SQLException {
+    public StudentView(String studentId) throws SQLException {
+        this.student = new Student(studentId);
         navigator = new JPanel();
         navigator.setLayout(new FlowLayout());
-        student = new JRadioButton("student");
-        teacher = new JRadioButton("teacher");
-        student.setSelected(true);
+
         search = new JButton("search");
         search.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    SearchData();
+                    if(grade.getSelectedIndex()!=0){
+                        StudentView.dataInit(Integer.parseInt(grade.getSelectedItem().toString()));
+                    }else{
+                        StudentView.dataInit();
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
         });
-        bg = new ButtonGroup();
-        bg.add(student);
-        bg.add(teacher);
-        navigator.add(student);
-        navigator.add(teacher);
 
-        college = new JComboBox();
-        getCollege();
-        navigator.add(college);
+        grade = new JComboBox();
+        getGrade();
+        navigator.add(grade);
         navigator.add(search);
 
-        subbmit = new JButton("submit");
-        subbmit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                subbmit();
-            }
-        });
 
-        delete = new JButton("delete");
-        delete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                deleteItem();
-            }
-        });
         tableModel = new DefaultTableModel();
         jTable = new JTable(tableModel);
         jTable.setBorder(BorderFactory.createLoweredBevelBorder());
         DefaultTableCellRenderer r = new DefaultTableCellRenderer();
         r.setHorizontalAlignment(JLabel.CENTER);
         jTable.setDefaultRenderer(Object.class, r);
-        downButton = new JPanel();
-        downButton.setLayout(new FlowLayout());
-        downButton.add(delete);
-        downButton.add(subbmit);
+        dataInit();
 
         this.setLayout(new BorderLayout());
         this.add(navigator, BorderLayout.NORTH);
         jsb = new JScrollPane(jTable);
         jsb.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.add(jsb, BorderLayout.CENTER);
-        this.add(downButton, BorderLayout.SOUTH);
 
-        this.setTitle("Administrator??");
+        this.setTitle("Student??");
         this.setSize(600, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocation(200, 200);
         this.setVisible(true);
     }
 
-    private void getCollege() throws SQLException {
-        String sql = "SELECT name FROM college";
-        ResultSet rs = DbUtil.executeQuery(sql);
-        college.addItem("--?????--");
-        try {
-            while (rs.next()) {
-                college.addItem(rs.getString("name"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private void getGrade() throws SQLException {
+        grade.addItem("-grade-");
+        for(int i = 1; i<=8; i++){
+            grade.addItem(i);
         }
-        rs.close();
-        DbUtil.close();
     }
 
-    private void SearchData() throws SQLException {
+    public static void dataInit() throws SQLException {
         if (tableModel != null) {
             tableModel.setRowCount(0);
             tableModel.setColumnCount(0);
-            tableModel.addColumn("id");
-            tableModel.addColumn("name");
-            if (student.isSelected()) {
-                tableModel.addColumn("class");
-            }
-            tableModel.addColumn("college");
-
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM ";
+            tableModel.addColumn("courseId");
+            tableModel.addColumn("courseName");
+            tableModel.addColumn("score");
+            tableModel.addColumn("grade");
+            ResultSet rs = student.getScore();
             Vector row = null;
-            ResultSet rs = null;
-            if (student.isSelected()) {
-                sql += "student ";
-                if (college.getSelectedIndex() != 0) {
-                    sql += "WHERE college = '";
-                    sql += college.getSelectedItem().toString() + "'";
-                }
-                rs = DbUtil.executeQuery(sql);
-                while (rs.next()) {
-                    row = new Vector();
-                    row.add(rs.getString("studentId"));
-                    row.add(rs.getString("studentName"));
-                    row.add(rs.getString("class"));
-                    row.add(rs.getString("college"));
-                    if (tableModel != null) {
-                        tableModel.addRow(row);
-                    }
-                }
-            } else {
-                sql += "teacher ";
-                if (college.getSelectedIndex() != 0) {
-                    sql += "WHERE college = '";
-                    sql += college.getSelectedItem().toString() + "'";
-                }
-                rs = DbUtil.executeQuery(sql);
-                while (rs.next()) {
-                    row = new Vector();
-                    row.add(rs.getString("id"));
-                    row.add(rs.getString("name"));
-                    row.add(rs.getString("college"));
-                    if (tableModel != null) {
-                        tableModel.addRow(row);
-                    }
+            while (rs.next()) {
+                row = new Vector();
+                row.add(rs.getString("courseId"));
+                row.add(Course.getCourseName(rs.getString("courseId")));
+                row.add(rs.getInt("score"));
+                row.add(Course.getCourseGrade(rs.getString("courseId")));
+                if (tableModel != null) {
+                    tableModel.addRow(row);
                 }
             }
             row = null;
@@ -168,42 +108,36 @@ public class StudentView extends JFrame {
         }
     }
 
-    private void subbmit() {
-
-    }
-
-    private void deleteItem() {
-        if (jTable != null) {
-            int row = jTable.getSelectedRow();
-            String sql = "DELETE FROM ";//student WHERE id = '1710120009'";
-            if (student.isSelected()) {
-                sql += "student ";
-            } else {
-                sql += "teacher ";
+    public static void dataInit(int grade) throws SQLException {
+        if (tableModel != null) {
+            tableModel.setRowCount(0);
+            tableModel.setColumnCount(0);
+            tableModel.addColumn("courseId");
+            tableModel.addColumn("courseName");
+            tableModel.addColumn("score");
+            tableModel.addColumn("grade");
+            ResultSet rs = student.getScore(grade);
+            Vector row = null;
+            while (rs.next()) {
+                row = new Vector();
+                row.add(rs.getString("courseId"));
+                row.add(Course.getCourseName(rs.getString("courseId")));
+                row.add(rs.getInt("score"));
+                row.add(Course.getCourseGrade(rs.getString("courseId")));
+                if (tableModel != null) {
+                    tableModel.addRow(row);
+                }
             }
-            sql += "WHERE id = '" + jTable.getValueAt(row, 0).toString() + "'";
-            DbUtil.executeUpdate(sql);
+            row = null;
+            tableModel.addRow(row);
+            rs.close();
             DbUtil.close();
-            try {
-                SearchData();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                System.out.println("??????????");
-            }
+            tableModel.fireTableDataChanged();
         }
     }
 
-    private static String openFile() {//return fileName
-        JFileChooser fDialog = new JFileChooser();
-        fDialog.setDialogTitle("Select File");
-        int returnVal = fDialog.showOpenDialog(null);
-        if (JFileChooser.APPROVE_OPTION == returnVal) {
-            return fDialog.getSelectedFile().toString();
-        } else
-            return null;
-    }
 
     public static void main(String[] args) throws SQLException {
-        StudentView av = new StudentView();
+        StudentView av = new StudentView("1710120007");
     }
 }

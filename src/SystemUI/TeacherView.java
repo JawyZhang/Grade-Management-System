@@ -3,7 +3,6 @@ package SystemUI;
 import BackgroundOperation.*;
 import DbOperation.DbUtil;
 
-import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -60,6 +59,10 @@ public class TeacherView extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (jTable!=null){
                     int row = jTable.getSelectedRow();
+                    if(jTable.getSelectedRow() == jTable.getRowCount()-1){
+                        JOptionPane.showMessageDialog(null,"Please select score!","Error",JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     String studentId = jTable.getValueAt(row,0).toString();
                     if(scoreManagement.deleteScore(new Score(new Course(courseId), new Student(studentId)))){
                         DbUtil.close();
@@ -120,7 +123,7 @@ public class TeacherView extends JFrame {
         this.add(jsb, BorderLayout.CENTER);
         this.add(downButton, BorderLayout.SOUTH);
 
-        this.setTitle("Course Select");
+        this.setTitle(courseId);
         this.setSize(600, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocation(200, 200);

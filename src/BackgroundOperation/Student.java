@@ -68,33 +68,16 @@ public class Student {
 
 	
 	public ResultSet getScore() {
-		String sqlString = "SELECT studentId,courseId,score FROM score WHERE studentId = ?";
-		PreparedStatement ps = DbUtil.executePreparedStatement(sqlString);
-		try {
-			ps.setString(1, this.studentId);
-			ResultSet resultSet = ps.executeQuery();
-			ps.close();
-			return resultSet;
-	    } catch (SQLException e) {
-	    	e.printStackTrace();
-	    	return null;
-	    }
+		String sqlString = "SELECT studentId,courseId,score FROM score WHERE studentId = "+this.studentId;
+		ResultSet resultSet = DbUtil.executeQuery(sqlString);
+		return resultSet;
 	}
 	
 	public ResultSet getScore(int grade) {
-		String sqlString = "SELECT studentId,courseId,score FROM score WHERE studentId = ? and courseId in "+
-							"(SELECT courseId FROM course WHERE courseGrade = ?)";
-		PreparedStatement ps = DbUtil.executePreparedStatement(sqlString);
-		try {
-			ps.setString(1, this.studentId);
-			ps.setInt(2, grade);
-			ResultSet resultSet = ps.executeQuery();
-			ps.close();
-			return resultSet;
-	    } catch (SQLException e) {
-	    	e.printStackTrace();
-	    	return null;
-	    }
+		String sqlString = "SELECT studentId,courseId,score FROM score WHERE studentId = "+this.studentId+" and courseId in "+
+							"(SELECT courseId FROM course WHERE courseGrade = "+grade+")";
+		ResultSet resultSet = DbUtil.executeQuery(sqlString);
+		return resultSet;
 	}
 
 	public static String getStudentnameByStudentid(String studentId) {

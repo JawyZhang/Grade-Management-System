@@ -36,9 +36,14 @@ public class TeacherCourseSelectView extends JFrame {
             public void actionPerformed(ActionEvent actionEvent) {
                 if (jTable!=null){
                     int row = jTable.getSelectedRow();
+                    if(jTable.getSelectedRow() == jTable.getRowCount()-1){
+                        JOptionPane.showMessageDialog(null,"Please select course!","Error",JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     String courseId = jTable.getValueAt(row,0).toString();
                     try {
                         TeacherView teacherView = new TeacherView(teacherId, courseId);
+                        dispose();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
